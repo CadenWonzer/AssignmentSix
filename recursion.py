@@ -26,6 +26,13 @@ def group_sum(start, nums, target):
     pre: start >= 0, len(nums) >= 0, target >= 0, nums will only contain ints
     post: return True if nums has a group of ints that sum to target, False otherwise
     """
+    if start >= len(nums):
+        return target == 0
+    if group_sum(start+1, nums, target-nums[start]):
+        return True
+    if group_sum(start+1, nums, target):
+        return True
+    return False
 
 
 # TODO: Modify this function. You may delete this comment when you are done.
@@ -38,6 +45,15 @@ def group_sum_6(start, nums, target):
     pre: start >= 0, len(nums) >= 0, target >= 0, nums will only contain ints
     post: return True if nums has a group of ints that sum to target, False otherwise
     """
+    if start >= len(nums):
+        return target == 0
+    if nums[start] == 6:
+        return group_sum_6(start+1, nums, target-6)
+    if group_sum_6(start+1, nums, target-nums[start]):
+        return True
+    if group_sum_6(start+1, nums, target):
+        return True
+    return False
 
 
 # TODO: Modify this function. You may delete this comment when you are done.
@@ -50,7 +66,13 @@ def group_no_adj(start, nums, target):
     pre: start >= 0, len(nums) >= 0, target >= 0, nums will only contain ints
     post: return True if nums has a group of ints that sum to target, False otherwise
     """
-
+    if start >= len(nums):
+        return target == 0
+    if group_no_adj(start+2, nums, target-nums[start]):
+        return True
+    if group_no_adj(start+1, nums, target):
+        return True
+    return False
 
 # TODO: Modify this function. You may delete this comment when you are done.
 def group_sum_5(start, nums, target):
@@ -62,7 +84,18 @@ def group_sum_5(start, nums, target):
     pre: start >= 0, len(nums) >= 0, target >= 0, nums will only contain ints
     post: return True if nums has a group of ints that sum to target, False otherwise
     """
-
+    if start >= len(nums):
+        return target == 0
+    if nums[start] % 5 == 0 and start+1 < len(nums):
+        if nums[start+1] == 1:
+            return group_sum_5(start+2, nums, target)
+        else:
+            return group_sum_5(start+1, nums, target-nums[start])
+    if group_sum_5(start+1, nums, target-nums[start]):
+        return group_sum_5(start+1, nums, target-nums[start])
+    if group_sum_5(start+1, nums, target):
+        return True
+    return False
 
 # TODO: Modify this function. You may delete this comment when you are done.
 def group_sum_clump(start, nums, target):
@@ -76,7 +109,25 @@ def group_sum_clump(start, nums, target):
     pre: start >= 0, len(nums) >= 0, target >= 0, nums will only contain ints
     post: return True if nums has a group of ints that sum to target, False otherwise
     """
-
+    if start >= len(nums):
+        return target == 0
+    if start < len(nums) - 1:
+        if nums[start] == nums[start+1]:
+            group_size = 0
+            for i in range(start, len(nums), 1):
+                if nums[i] == nums[start]:
+                    group_size+=1
+                else:
+                    break
+            if group_sum_clump(start+j, nums, target-(group_size*nums[start])):
+                return True
+            if group_sum_clump(start+j, nums, target):
+                return True
+    if group_sum_clump(start+1, nums, target-nums[start]):
+        return True
+    if group_sum_clump(start+1, nums, target):
+        return True
+    return False
 
 # TODO: Modify this function
 def split_array(nums):
