@@ -2,7 +2,7 @@
 Student information for this assignment:
 
 Replace <FULL NAME> with your name.
-On my/our honor, Caden Wonzer and Bella Chojnacki, this
+On my/our honor, Caden Wonzer and Isabella Chojnacki, this
 programming assignment is my own work and I have not provided this code to
 any other student.
 
@@ -13,11 +13,10 @@ code to someone else), the case shall be submitted to the Office of the Dean of
 Students. Academic penalties up to and including an F in the course are likely.
 
 UT EID 1: czw99
-UT EID 2:
+UT EID 2: ilc422
 """
 
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def group_sum(start, nums, target):
     """
     Given a list of ints, determine if there exists a group of some ints that sum to the
@@ -35,7 +34,6 @@ def group_sum(start, nums, target):
     return False
 
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def group_sum_6(start, nums, target):
     """
     Given a list of ints, determine if there exists a group of some ints that sum to the
@@ -56,7 +54,6 @@ def group_sum_6(start, nums, target):
     return False
 
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def group_no_adj(start, nums, target):
     """
     Given a list of ints, determine if there exists a group of some ints that sum to
@@ -74,7 +71,6 @@ def group_no_adj(start, nums, target):
         return True
     return False
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def group_sum_5(start, nums, target):
     """
     Given a list of ints, determine if there exists a group of some ints that sum to
@@ -97,7 +93,6 @@ def group_sum_5(start, nums, target):
         return True
     return False
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def group_sum_clump(start, nums, target):
     """
     Given a list of ints, determine if there exists a group of some ints that sum to
@@ -111,25 +106,17 @@ def group_sum_clump(start, nums, target):
     """
     if start >= len(nums):
         return target == 0
-    if start < len(nums) - 1:
-        if nums[start] == nums[start+1]:
-            group_size = 0
-            for i in range(start, len(nums), 1):
-                if nums[i] == nums[start]:
-                    group_size+=1
-                else:
-                    break
-            if group_sum_clump(start+j, nums, target-(group_size*nums[start])):
-                return True
-            if group_sum_clump(start+j, nums, target):
-                return True
-    if group_sum_clump(start+1, nums, target-nums[start]):
+    GroupSum = nums[start]
+    NextIndex = start + 1
+    while NextIndex < len(nums) and nums[NextIndex] == nums[start]:
+        GroupSum += nums[NextIndex]
+        NextIndex += 1
+    if group_sum_clump(NextIndex, nums, target - GroupSum):
         return True
-    if group_sum_clump(start+1, nums, target):
+    if group_sum_clump(NextIndex, nums, target):
         return True
     return False
 
-# TODO: Modify this function
 def split_array(nums):
     """
     Given a list of ints, determine if the numbers can be split evenly into two groups
@@ -139,9 +126,20 @@ def split_array(nums):
     pre: len(nums) >= 0, nums will only contain ints
     post: return True if nums can be split, False otherwise
     """
+    def helper(index, target):
+        if target == 0:
+            return True
+        if index == len(nums) or target < 0:
+            return False
+        include = helper(index + 1, target - nums[index])
+        exclude = helper(index + 1, target)
+        return include or exclude
+    total = sum(nums)
+    if total % 2 != 0:
+        return False
+    return helper(0, total //2)
 
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def split_odd_10(nums):
     """
     Given a list of ints, determine if the numbers can be split evenly into two groups
@@ -151,9 +149,15 @@ def split_odd_10(nums):
     pre: len(nums) >= 0, nums will only contain ints
     post: return True if nums can be split, False otherwise
     """
+    def helper(index, OddSum, DivSum):
+        if index == len(nums):
+            return OddSum % 2 == 1 and DivSum % 10 == 0
+        InOddSum = helper(index + 1, OddSum + nums[index], DivSum)
+        InDivSum = helper(index + 1, OddSum, DivSum + nums[index])
+        return InOddSum or InDivSum
+    return helper(0, 0, 0)
 
 
-# TODO: Modify this function. You may delete this comment when you are done.
 def split_53(nums):
     """
     Given a list of ints, determine if the numbers can be split evenly into two groups
@@ -165,3 +169,18 @@ def split_53(nums):
     pre: len(nums) >= 0, nums will only contain ints
     post: return True if nums can be split, False otherwise
     """
+    if len(nums) == 0:
+        return False
+    
+    def helper(index, Group1Sum, Group2Sum):
+        if index == len(nums):
+            return Group1Sum == Group2Sum
+        if nums[index] % 5 == 0:
+            return helper(index + 1, Group1Sum + nums[index], Group2Sum)
+        elif nums[index] % 3 == 0:
+            return helper(index + 1, Group1Sum, Group2Sum + nums[index])
+        else:
+            InGroup1 = helper(index + 1, Group1Sum + nums[index], Group2Sum)
+            InGroup2 = helper(index + 1, Group1Sum, Group2Sum + nums[index])
+            return InGroup1 or InGroup2
+    return helper(0, 0, 0)
